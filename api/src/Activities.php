@@ -170,4 +170,37 @@ function uppdateraAktivitet(string $id, string $aktivitet): Response {
  * @return Response
  */
 function raderaAktivetet(string $id): Response {
+// kontrollera indata
+$kontrolleraId=filter_var($id, FILTER_VALIDATE_INT);
+
+if ($kontrolleraId===false) {
+    $retur=new stdClass();
+    $retur->error=["bad request", "ogiltigt id"];
+    return new Response($retur, 400);
+
+
+}
+
+
+$db=connectDb();
+// skicka fråga
+
+$stmt=$db->prepare("DELETE FROM aktiviteter WHERE id=:id");
+$stmt->execute(['id'=>$kontrolleraId]);
+
+// kontrollera svar 
+if ($stmt->rowCount()>0) {
+    $retur=new stdClass();
+    $retur->result=true;
+    $retur->meddelande=["Radera ltckades", $stmt->rowCount() . " poster raderades"];
+    return new Response($retur);
+} else {
+    $retur=new stdClass();
+    $retur->result=false;
+    $retur->meddelande=["Radera misslyckades", "inga poster raderades"];
+    return new Response($retur);
+}
+
+
+
 }
