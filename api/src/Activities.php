@@ -100,9 +100,18 @@ function sparaNyAktivitet(string $aktivitet): Response {
 
     // koppla mot databas
     $db=connectDb();
-    // skcika fråga
+
+    try {
     $stmt=$db->prepare("INSERT INTO aktiviteter (aktivitet) VALUES (:aktivitet)");
     $svar=$stmt->execute(['aktivitet'=>$saneradAktivitet]);
+
+    } catch (Exception $e) {
+    $retur=new stdClass();
+    $retur->error=["bad request", "kan inte skapa en aktivitet"];
+    return new Response($retur, 400);
+    }
+    // skcika fråga
+
 
     // kontrollera resultat och returnera svar
     if($svar===true) {
@@ -185,8 +194,18 @@ if ($kontrolleraId===false) {
 $db=connectDb();
 // skicka fråga
 
-$stmt=$db->prepare("DELETE FROM aktiviteter WHERE id=:id");
-$stmt->execute(['id'=>$kontrolleraId]);
+try {
+    $stmt=$db->prepare("DELETE FROM aktiviteter WHERE id=:id");
+    $stmt->execute(['id'=>$kontrolleraId]);
+    
+} catch (Exception $e) {
+    $retur=new stdClass();
+    $retur->error=["bad request", "kan inte radera en aktivitet"];
+    return new Response($retur, 400);
+
+}
+
+
 
 // kontrollera svar 
 if ($stmt->rowCount()>0) {
