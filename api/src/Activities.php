@@ -94,6 +94,27 @@ function hamtaEnskildAktivitet(string $id): Response {
  * @return Response
  */
 function sparaNyAktivitet(string $aktivitet): Response {
+    // sanera indata
+    $saneradAktivitet=htmlentities($aktivitet);
+
+
+    // koppla mot databas
+    $db=connectDb();
+    // skcika fråga
+    $stmt=$db->prepare("INSERT INTO aktiviteter (aktivitet) VALUES (:aktivitet)");
+    $svar=$stmt->execute(['aktivitet'=>$saneradAktivitet]);
+
+    // kontrollera resultat och returnera svar
+    if($svar===true) {
+        $retur=new stdClass();
+        $retur->id=$db->lastInsertId();
+        $retur->meddelande=['Spara lyckades', '1 post lades till'];
+        return new Response($retur);
+    } else {
+        $retur=new stdClass();
+        $retur->error=['Bad request', "Något gick fel vid spara", $stmt->errorInfo()];
+        return new Response($retur, 400);
+    }
 }
 
 /**
@@ -103,6 +124,44 @@ function sparaNyAktivitet(string $aktivitet): Response {
  * @return Response
  */
 function uppdateraAktivitet(string $id, string $aktivitet): Response {
+    // kontrollera indata
+    $kontrolleraID=filter_var($id, FILTER_VALIDATE_INT);
+    $saneradAktivitet=htmlentities($aktivitet);
+
+
+    if($kontrolleraID===false) {
+        $retur=new stdClass();
+        $retur->error=['Bad request' , 'Ogiltigt id'];
+        return new Response($retur, 400);
+    }
+    // koppla databas
+
+    $db =connectDb();
+    $stmt=$db->prepare("UPDATE aktiviteter SET aktivitet=:aktivitet WHERE id=:id");
+    $stmt->execute(['aktivitet'=>$saneradAktivitet, 'id'=>$kontrolleraID]);
+
+    // skicka updaterin
+    if($stmt->rowCount()===1) {
+        $retur=new stdClass();
+        $retur->result=true;
+        $retur->meddelande=["Uppdatera lyckades", "1 rader uppdaterades"];
+        return new Response($retur);
+
+    } elseif ($stmt->rowCount()===0){ 
+        $retur=new stdClass();
+        $retur->result=false;
+        $retur->meddelande=["Uppdatera misslyckades", "inga rader uppdaterades"];
+        return new Response($retur);
+    } else {
+        $retur=new stdClass();
+        $retur->result=true;
+        $retur->meddelande=["Hoppsan","Uppdatera lyckades", $stmt->rowCount() . "rader uppdaterades"];
+        return new Response($retur);
+    }
+
+    // kontrollera resutlat
+
+    // 
 }
 
 /**
