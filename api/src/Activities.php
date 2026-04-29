@@ -103,7 +103,7 @@ function sparaNyAktivitet(string $aktivitet): Response {
 
     try {
     $stmt=$db->prepare("INSERT INTO aktiviteter (aktivitet) VALUES (:aktivitet)");
-    $svar=$stmt->execute(['aktivitet'=>$saneradAktivitet]);
+    $svar=$stmt->execute([''=>$saneradAktivitet]);
 
     } catch (Exception $e) {
     $retur=new stdClass();

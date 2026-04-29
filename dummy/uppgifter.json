@@ -1,0 +1,46 @@
+{
+	"tasks":
+
+	[
+		{
+			"id": 1,
+			"activityid": 3,
+			"date": "2026-04-28",
+			"time": "00:24",
+			"activity": "Databaser",
+			"description": "Fortsatte med projektplanen och gjorde klart databasen"
+		},
+		{
+			"id": 2,
+			"activityid": 5,
+			"date": "2026-04-27",
+			"time": "02:00",
+			"activity": "Slöseri med tid",
+			"description": "Slötittade på youtube"
+		},
+		{
+			"id": 3,
+			"activityid": 1,
+			"date": "2026-04-27",
+			"time": "00:15",
+			"activity": "PHP",
+			"description": "Skapa diagram"
+		},
+		{
+			"id": 4,
+			"activityid": 1,
+			"date": "2026-04-27",
+			"time": "02:15",
+			"activity": "PHP",
+			"description": "Skriva databas anrop"
+		},
+		{
+			"id": 5,
+			"activityid": 1,
+			"date": "2026-04-27",
+			"time": "00:00",
+			"activity": "PHP",
+			"description": "Surfa w3"
+		}
+	]
+}
