@@ -1,6 +1,6 @@
 window.onload=() =>{
     //rensa listan
-    alert("tömmer listan!");
+  //  alert("tömmer listan!");
     rensaLista()
     // sätt standardvärderna
     //alert ("sätter standardvärden för perioden")
@@ -11,7 +11,7 @@ window.onload=() =>{
 
 
 function rensaLista() {
-    let lista  = document.getElementById("test"); // HTMLElement
+    let lista  = document.getElementById("aktiviteter"); // HTMLElement
     lista.innerHTML = "";
 }
 
@@ -22,8 +22,8 @@ function setDateInterval() {
     let fromDatum = new Date(idag.getFullYear(), aktuellManad, 1, 24);
     let toDatum =new Date(idag.getFullYear(), aktuellManad+1, 0,24);
 
-    document.getElementById("franDatum").value=fromDatum.toISOString().subtstring(0,10);
-    document.getElementById("tillDatum").value=toDatum.toISOString().subtstring(0,10);
+    document.getElementById("franDatum").value=fromDatum.toISOString().substring (0,10);
+    document.getElementById("tillDatum").value=toDatum.toISOString().substring (0,10);
 
 }
 
@@ -57,8 +57,18 @@ function getCompilation() {
             }
         ]
     }
+    fyllLista(retur)
 }
 
-function fyllLista(retur) {
+function fyllLista(data) {
+let lista = document.getElementById("aktiviteter")
+for (let i=0; i<data.tasks.length; i++) {
+    let rad=document.createElement("ul")
+    rad.className="lista"
+    rad.innerHTML=`<li>${data.tasks[i].name}</li><li class="right">${data.tasks[i].time}</li>`
+        lista.appendChild(rad)
+}
 
 }
+
+
