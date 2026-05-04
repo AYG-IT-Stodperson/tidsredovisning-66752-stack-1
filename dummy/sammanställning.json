@@ -4,30 +4,30 @@
 	[
 		{
 			"activityid": 5,
-			"activity": "Slöseri med tid"
+			"activity": "Slöseri med tid",
 			"time":"02:00"
 		},
 		{
 			"activityid": 1,
-			"activity": "PHP"
+			"activity": "PHP",
 			"time":"02:30"
 
 		},
 		{
 			"activityid": 2,
-			"activity": "Javascript"
+			"activity": "Javascript",
 			"time":"00:00"
 
 		},
 		{
 			"activityid": 4,
-			"activity": "HTML/CSS"
+			"activity": "HTML/CSS",
 			"time":"00:00"
 
 		},
 		{
 			"activityid": 3,
-			"activity": "Databaser"
+			"activity": "Databaser",
 			"time":"00:24"
 
 		}

@@ -30,7 +30,31 @@ function setDateInterval() {
 }
 
 function getTaskList() {
+    fetch("dummy/uppgifter.json")
+    .then(response =>{
+        if(response.ok) {
+            return response.json()
+        }
 
+        //respone är inte ok...
+        return response.json() 
+           .catch(() => null) // är inte svaret json händer inget
+           .then(message =>{
+               let fel = {status:response.status,
+                text: response.statusText,
+                url: response.url,
+                message
+               }
+               throw fel
+           })
+           
+    })
+    .then(data =>{
+        fyllLista(data)
+    })
+    .catch(error =>{
+        console.error(error)
+    })
 
 }
 

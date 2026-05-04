@@ -6,7 +6,7 @@ window.onload=() =>{
     //alert ("sätter standardvärden för perioden")
     setDateInterval()
     // hämta från Api
-    getCompilation()
+    getActivites()
 }
 
 
@@ -27,7 +27,29 @@ function setDateInterval() {
 
 }
 
-function getActivites() {
+async function getActivites() {
+    try {
+        let response= await fetch("dummy/sammanställning.json")
+        if(response.ok) {
+            let data = await response.json()
+            fyllLista(data)
+        } else {
+            let message = null
+            try{
+                message=await response.json()
+            } finally {
+                let fel = {status:response.status,
+                text: response.statusText,
+                url: response.url,
+                message
+            }
+            throw fel
+        }
+    }
+
+    } catch (error) {
+        console.log(error)
+    }
 
 }
 
@@ -36,7 +58,7 @@ let lista = document.getElementById("aktiviteter")
 for (let i=0; i<data.tasks.length; i++) {
     let rad=document.createElement("ul")
     rad.className="lista"
-    rad.innerHTML=`<li>${data.tasks[i].name}</li><li class="right">${data.tasks[i].time}</li>`
+    rad.innerHTML=`<li>${data.tasks[i].activity}</li><li class="right">${data.tasks[i].time}</li>`
         lista.appendChild(rad)
 }
 
