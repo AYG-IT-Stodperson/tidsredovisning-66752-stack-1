@@ -10,7 +10,7 @@ require_once __DIR__ . '/activities.php';
  * @return Response
  */
 function tasklists(Route $route): Response {
-    return new Response("Tasklist");
+  
     try {
         if (count($route->getParams()) === 1 && $route->getMethod() === RequestMethod::GET) {
             return hamtaSida($route->getParams()[0]);
@@ -67,7 +67,62 @@ function hamtaSida(string $sida): Response {
  * @return Response
  */
 function hamtaDatum(string $from, string $tom): Response {
+    // kontrollera indata
+    $fromDate=DateTimeImmutable::createFromFormat("Y-m-d", $from);
+    $tomDate=DateTimeImmutable::createFromFormat("Y-m-d", $tom);
+
+
+    $err=[];
+    if($fromDate===false) {
+        $err[]="ogiltigt från datum";
+    } elseif ($fromDate->format('Y-m-d')!==$from) {
+        $err[]="ogiltigt format på från datum";
+    }
+
+    if($tomDate===false) {
+        $err[]="ogiltigt till datum";
+    }  elseif ($tomDate->format('Y-m-d')!==$tom) {
+        $err[]="ogiltigt format på till datum";
+    }
     
+    if(count($err)===0 && $fromDate->format('Y-m-d')>$tomDate->format('Y-m-d')) {
+        $err[]="Från datum ska vara mindre än till datun";
+    }
+
+    if (count($err)>0) {
+        array_unshift($err, 'bad request');
+        $retur=new stdClass();
+        $retur->error=$err;
+        return new Response($retur, 400);
+    }
+
+    // Koppla databas
+    $db=connectDb();
+
+
+    // skicka fråga
+    $stmt=$db->prepare('SELECT uppgifter.id, aktivitet_id, datum, varaktighet, aktivitet, beskrivning
+FROM uppgifter
+INNER JOIN aktiviteter ON aktiviteter.id=aktivitet_id
+WHERE datum BETWEEN :from AND :to
+ORDER BY datum');
+    $stmt->execute(['from'=>$fromDate->format('Y-m-d'), 'to'=>$tomDate->format("Y-m-d")]);
+
+    // Kontrollera svar och retunera data
+    $retur= [];
+
+    foreach ($stmt->fetchAll() as $row) {
+        $post=new stdClass();
+        $post->id=$row['id'];
+        $post->activtyId=$row['aktivitet_id'];
+        $post->date=$row['datum'];
+        $post->time=$row['varaktighet'];
+        $post->activity=$row['aktivitet'];
+        $post->description=$row['beskrivning'];
+        $retur[]=$post;
+        
+    }
+    return new Response($retur);
 }
 
 /**

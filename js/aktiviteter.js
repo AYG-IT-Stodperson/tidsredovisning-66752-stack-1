@@ -1,6 +1,6 @@
 window.onload=() =>{
     //rensa listan
-  //  alert("tömmer listan!");
+    alert("tömmer listan!");
     rensaLista()
     // sätt standardvärderna
     //alert ("sätter standardvärden för perioden")
