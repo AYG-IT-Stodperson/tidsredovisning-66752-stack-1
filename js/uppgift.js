@@ -1,4 +1,9 @@
 window.onload=() =>{
+    //Skapa händelselyssnare
+
+    document.getElementById('hamtaDatum').addEventListener("click", hamtaDatum)
+    document.getElementById('hamtaSida').addEventListener("click", hamtaSida)
+
     //rensa listan
     alert("tömmer listan!");
     rensaLista()
@@ -29,7 +34,38 @@ function setDateInterval() {
 
 }
 
-function getTaskList() {
+function hamtaDatum() {
+        rensaLista()
+    fetch("dummy/uppgifter.json")
+    .then(response =>{
+        if(response.ok) {
+            return response.json()
+        }
+
+        //respone är inte ok...
+        return response.json() 
+           .catch(() => null) // är inte svaret json händer inget
+           .then(message =>{
+               let fel = {status:response.status,
+                text: response.statusText,
+                url: response.url,
+                message
+               }
+               throw fel
+           })
+           
+    })
+    .then(data =>{
+        fyllLista(data)
+    })
+    .catch(error =>{
+        console.error(error)
+    })
+
+}
+
+function hamtaSida() {
+    rensaLista()
     fetch("dummy/uppgifter.json")
     .then(response =>{
         if(response.ok) {
@@ -59,7 +95,6 @@ function getTaskList() {
 }
 
 
-
 function fyllLista(data) {
 let lista = document.getElementById("uppgifter")
 for (let i=0; i<data.tasks.length; i++) {
@@ -74,3 +109,41 @@ for (let i=0; i<data.tasks.length; i++) {
 }
 
 }
+
+function aktiveraAlternativ(ev){
+    try {
+
+        if(ev.target.value==='sida') {
+            // aktivera rätt kontroller
+            document.getElementById('sidnr').disabled = false;
+            document.getElementById('hamtaSida').disabled = false;
+            hamtaSida()
+            // avaktivera övriga kontroller
+
+            document.getElementById('franDatum').disabled = true;
+            document.getElementById('tillDatum').disabled = true;
+            document.getElementById('hamtaDatum').disabled = true;
+        } else {
+
+            document.getElementById('franDatum').disabled = false;
+            document.getElementById('tillDatum').disabled = false;
+            document.getElementById('hamtaDatum').disabled = false;
+            hamtaDatum()
+            
+            document.getElementById('sidnr').disabled = true;
+            document.getElementById('hamtaSida').disabled = true;
+        }
+            
+    
+        } catch (error) {
+            console.log(error)
+            
+            document.getElementById('franDatum').disabled = false;
+            document.getElementById('tillDatum').disabled = false;
+            document.getElementById('hamtaDatum').disabled = false;
+            hamtaDatum()
+
+                        document.getElementById('sidnr').disabled = true;
+            document.getElementById('hamtaSida').disabled = true;
+        }
+    }

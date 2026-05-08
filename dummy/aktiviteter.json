@@ -1,0 +1,26 @@
+{
+"aktiviteter":
+
+	[
+		{
+			"id": 5,
+			"aktivitet": "Slöseri med tid"
+		},
+		{
+			"id": 1,
+			"aktivitet": "PHP"
+		},
+		{
+			"id": 2,
+			"aktivitet": "Javascript"
+		},
+		{
+			"id": 4,
+			"aktivitet": "HTML/CSS"
+		},
+		{
+			"id": 3,
+			"aktivitet": "Databaser"
+		}
+	]
+}

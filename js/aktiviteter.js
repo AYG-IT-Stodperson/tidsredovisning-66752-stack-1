@@ -1,4 +1,7 @@
 window.onload=() =>{
+    document.getElementById('hamtaDatum').addEventListener("click", hamtaDatum)
+    document.getElementById('hamtaSida').addEventListener("click", hamtaSida)
+
     //rensa listan
     alert("tömmer listan!");
     rensaLista()
@@ -64,4 +67,30 @@ for (let i=0; i<data.tasks.length; i++) {
 
 }
 
+function aktiveraAlternativ(ev){
+    try {
 
+        if(ev.target.value==='sida') {
+            // aktivera rätt kontroller
+            document.getElementById('sidnr').disabled = false;
+            document.getElementById('hamtaSida').disabled = false;
+            // avaktivera övriga kontroller
+
+            document.getElementById('franDatum').disabled = true;
+            document.getElementById('tillDatum').disabled = true;
+            document.getElementById('hamtaDatum').disabled = true;
+        } else {
+
+            document.getElementById('franDatum').disabled = false;
+            document.getElementById('tillDatum').disabled = false;
+            document.getElementById('hamtaDatum').disabled = false;
+            
+            document.getElementById('sidnr').disabled = true;
+            document.getElementById('hamtaSida').disabled = true;
+        }
+            
+    
+        } catch (error) {
+            console.log(error)
+        }
+    }

@@ -39,11 +39,23 @@
             <a href="aktiviteter.html"></a>
         </div>
     </div>
+    <input type="radio" name="alternativ" value="period" checked onchange="aktiveraAlternativ(event)">
     <input type="date" id="franDatum">
     <input type="date" id="tillDatum">
+    <button id="hamtaDatum">Hämta data</button>
     <div id="aktiviteter">
     </div>
-    
+    <p>
+        <input type="radio" name="alternativ" value="sida" checked onchange="aktiveraAlternativ(event)">
+           Sida:
+            <select id="sidnr">
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+            </select>
+        <button id="hamtaSida">Hämta data</button>
+            </p>
 
 
     <div id="uppgifter">
