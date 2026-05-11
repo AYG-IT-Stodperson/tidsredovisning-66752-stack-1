@@ -213,7 +213,7 @@ function sparaNyUppgift(array $postData): Response
         $retur->meddelande = ['Spara lyckades'];
 
         return new Response($retur);
-    } catch (Exception$e) {
+    } catch (Exception $e) {
         $retur = new stdClass();
         $retur->error = ['Bad request', 'Fel vid spara (felaktigt aktivitetsID)'];
         return new Response($retur, 400);
@@ -228,9 +228,57 @@ function sparaNyUppgift(array $postData): Response
  */
 function uppdateraUppgift(string $id, array $postData): Response
 {
+    // kontrollera indata
+    $indataErr = kontrolleraIndata($postData);
+    if (count($indataErr) > 0) {
+        $retur = new stdClass();
+        $retur->error = array_merge(['Bad request'], $indataErr);
+        return new Response($retur, 400);
+    }
+    if (!array_key_exists('description', $postData)) {
+        $postData['description'] = "";
+    } else {
+        $postData['description'] = htmlentities($postData['description']);
 
+    }
+    $taskId = filter_var($id, FILTER_VALIDATE_INT);
+
+    if ($taskId === false) {
+        $retur = new stdClass();
+        $retur->error = ['Bad request', 'Ogiltigt id'];
+        return new Response($retur, 400);
+
+    }
+    $postData['id'] = $taskId;
+    unset($postData['action']);
+    // koppla databas
+    $db = connectDb();
+    try {
+        //skicka fråga
+        $stmt = $db->prepare('UPDATE uppgifter SET
+      datum=:date, varaktighet=:time, aktivitet_id=:activityId, beskrivning=:description
+      WHERE id=:id');
+
+        $stmt->execute($postData);
+
+
+        // kontrollera svar och returnera medelande
+        if ($stmt->rowCount() === 0) {
+            $retur = new stdClass();
+            $retur->result = false;
+            $retur->message = ["Uppdatera misslyckades", "inga rader uppdaterades"];
+        } else {
+            $retur = new stdClass();
+            $retur->result = true;
+            $retur->message = ["Uppdatera lyckades", "{$stmt->rowCount()}rader uppdaterades"];
+        }
+        return new Response($retur);
+    } catch (Exception $e) {
+        $retur = new stdClass();
+        $retur->error = ['Bad request', 'Fel vid spara (felaktigt aktivitetsID)'];
+        return new Response($retur, 400);
+    }
 }
-
 /**
  * Raderar en uppgiftspost
  * @param string $id Id för posten som ska raderas
