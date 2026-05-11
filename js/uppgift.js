@@ -147,3 +147,10 @@ function aktiveraAlternativ(ev){
             document.getElementById('hamtaSida').disabled = true;
         }
     }
+
+
+    // inte i framtiden
+
+    // inte mer än 8 timmar
+
+    // jämna kvartar

@@ -11,6 +11,12 @@ window.onload = () => {
                 emptyForm()
             }
         })
+
+        // händelselyssnare för  sparknappen
+
+        document.getElementById('spara').addEventListener("click", sparaUppgift)
+
+        document.getElementById('inputDatum').max = new (new Date()).toISOString().substring(0, 10)
 }
 
 async function getActivities() {
@@ -104,4 +110,41 @@ function emptyForm() {
     document.getElementById('inputBeskrivning').value = ''
     // Aktivitet är en dropdown!
     document.getElementById('inputAktivitet').value = -1
+}
+
+function sparaUppgift() {
+    if(!valideraFormulär()) {
+        alert('Fixa uppgifterna')
+        return
+    }
+
+    alert("hurra!, sparar direkt")
+}
+
+function valideraFormulär() {
+    let valid = true
+    // inte i framtiden
+    if(document.getElementById('inputDatum').value>(new Date()).toISOString().substring(0,10)) {
+        valid=false
+    }
+
+    // Max 8h 
+      if(document.getElementById('inputVaraktighet').value>"08:00"){
+        valid=false
+    }
+    // min 15 minuter
+        if(document.getElementById('inputVaraktighet').value<"00:15"){
+        valid=false
+    }
+    //15 min intervall
+    
+        if([!"00","15","30","45"].includes(document.getElementById('inputVaraktighet').value.substring(5, 2))) {
+        valid=false
+    }
+    //aktivitet ska finnas
+        if(document.getElementById('inputAktivitet').selectedIndex<0){
+        valid=false
+    }
+
+    return valid;
 }
