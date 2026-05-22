@@ -52,7 +52,7 @@ function hamtaAllaAktiviteter(): Response {
         $retur[]=$rad;
         }
         // returnera svar
-        return new Response(["actvities"=>$retur]);
+        return new Response(["activities"=>$retur]);
     }
 /**
  * Returnerar en enskild aktivitet som finns i databasen

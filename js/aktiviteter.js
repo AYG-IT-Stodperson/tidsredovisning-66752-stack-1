@@ -1,13 +1,11 @@
 window.onload=() =>{
-    document.getElementById('hamtaDatum').addEventListener("click", hamtaDatum)
-    document.getElementById('hamtaSida').addEventListener("click", hamtaSida)
 
     //rensa listan
     alert("tömmer listan!");
     rensaLista()
     // sätt standardvärderna
     //alert ("sätter standardvärden för perioden")
-    setDateInterval()
+  //  setDateInterval()
     // hämta från Api
     getActivites()
 }
@@ -32,7 +30,7 @@ function setDateInterval() {
 
 async function getActivites() {
     try {
-        let response= await fetch("dummy/sammanställning.json")
+        let response= await fetch("api/activity")
         if(response.ok) {
             let data = await response.json()
             fyllLista(data)
@@ -58,10 +56,10 @@ async function getActivites() {
 
 function fyllLista(data) {
 let lista = document.getElementById("aktiviteter")
-for (let i=0; i<data.tasks.length; i++) {
+for (let i=0; i<data.activities.length; i++) {
     let rad=document.createElement("ul")
     rad.className="lista"
-    rad.innerHTML=`<li>${data.tasks[i].activity}</li><li class="right">${data.tasks[i].time}</li>`
+    rad.innerHTML=`<li>${data.activities[i].activity}</li><li class="right">${data.activities[i].time}</li>`
         lista.appendChild(rad)
 }
 

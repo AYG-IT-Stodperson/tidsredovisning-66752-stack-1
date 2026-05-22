@@ -27,7 +27,34 @@ function setDateInterval() {
 
 }
 
-function getActivites() {
+function getCompilation() {
+     let franDatum = document.getElementById("franDatum").value;
+    let tillDatum = document.getElementById("tillDatum").value;
+    fetch(`api/compilation/${franDatum}/${tillDatum}`)
+        .then(response =>{
+            if(response.ok) {
+                return response.json()
+            }
+
+            // response är inte ok...
+            return response.json()
+                .catch(()=>null) // Är svaret inte json händer inget
+                .then(message =>{
+                    let fel ={status:response.status,
+                        text: response.statusText,
+                        url: response.url,
+                        message
+                    }
+
+                    throw fel
+                })
+        })
+        .then(data =>{
+            fyllLista(data)
+        })
+        .catch(error => {
+            console.error(error)
+        })
 
 }
 
@@ -40,6 +67,11 @@ for (let i=0; i<data.tasks.length; i++) {
         lista.appendChild(rad)
 }
 
+}
+
+function hamtaNyData(){
+    rensaLista()
+    getCompilation()
 }
 
 

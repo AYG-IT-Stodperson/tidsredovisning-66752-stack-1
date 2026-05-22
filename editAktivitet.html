@@ -4,6 +4,18 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Tidapp</title>
+        <style>
+
+            .error {
+    color: red;
+    background-color: palegoldenrod;
+}
+
+input:invalid {
+    background-color: darkred;
+    color: white;
+}
+        </style>
     </head>
     <body>
         <nav>
@@ -11,6 +23,7 @@
                 <li><a href="index.html">Sammanställning</a></li>
                 <li class="aktiv"><a href="aktiviteter.html">Aktiviteter</a></li>
                 <li><a href="uppgifter.html">Uppgifter</a></li>
+                <li><a href="sammanstallning.html"></a></li>
             </ul>
         </nav>
         <main>
@@ -18,7 +31,7 @@
                 <legend>Aktiviteter</legend>
                 <label id="labelId">ID: <span id="valueId">3</span></label>
                 <label id="labelAktivitet">Aktivitet:
-                    <input type="text" id="inputAktivitet" value="Databas">
+                    <input type="text" id="inputAktivitet" value="Databas"> <span id="inputAktivitet_Err" class="error" ></span>
                 </label>
                 <p>
                     <button id="spara">Spara</button>

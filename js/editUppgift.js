@@ -1,4 +1,5 @@
 let aktiviteter = []
+let aktuelltUppgiftId = null
 window.onload = () => {
     let queryString = window.location.search
     let parameters = new URLSearchParams(queryString)
@@ -6,6 +7,7 @@ window.onload = () => {
     getActivities()
         .finally(() => {
             if (parameters.has('id')) {
+                aktuelltUppgiftId=parameters.get('id')
                 fillForm(parameters.get('id'))
             } else {
                 emptyForm()
@@ -16,12 +18,12 @@ window.onload = () => {
 
         document.getElementById('spara').addEventListener("click", sparaUppgift)
 
-        document.getElementById('inputDatum').max = new (new Date()).toISOString().substring(0, 10)
+        document.getElementById('inputDatum').max = new Date().toISOString().substring(0, 10)
 }
 
 async function getActivities() {
     try {
-        let response = await fetch("dummy/aktiviteter.json")
+        let response = await fetch("api/activity")
         if (response.ok) {
             let data = await response.json()
             aktiviteter = data.activities
@@ -63,21 +65,16 @@ function fillDropdown(aktiviteter) {
 async function fillForm(id) {
     // Hämta uppgifter, just nu alla och välj rätt sedan hämta rätt.
     try {
-        let response = await fetch("dummy/uppgifter.json")
+        let response = await fetch(`api/task/${id}`)
         if (response.ok) {
             let data = await response.json()
-            // Hitta rätt post
-            let post = data.tasks.find(uppg => uppg.id == id)
-            if (!post) {
-                alert("Uppgiften hittades inte")
-                emptyForm()
-                return
-            }
+            
+            
             document.getElementById('labelId').style.display = "initial"
             document.getElementById('valueId').innerText = post.id
             document.getElementById('inputDatum').value = post.date
             document.getElementById('inputVaraktighet').value = post.time
-            document.getElementById('inputBeskrivning').value = post.description
+            document.getElementById('inputBeskrivning').innerHTML = post.description
             // Aktivitet är en dropdown!
             document.getElementById('inputAktivitet').value = post.activityId
         } else {
@@ -117,9 +114,47 @@ function sparaUppgift() {
         alert('Fixa uppgifterna')
         return
     }
+    alert('hurra, sparar direkt')
 
-    alert("hurra!, sparar direkt")
+    if(aktuelltUppgiftId) {
+        uppdateraBefintligUppgift()
+    } else {
+        sparaNyUppgift()
+    }
+
 }
+function sparaNyUppgift(){
+    let form = new FormData()
+    form.append("date", document.getElementById('inputDatum').value)
+    form.append("time", document.getElementById('inputVaraktighet').value)
+    form.append("activityId", document.getElementById('labelAktivitet').value)
+    form.append("description", document.getElementById('labelBeskrivning').value)
+    form.append("action", "save")
+    fetch("api/task", {
+        method:"POST",
+        body:form
+    })
+        .then(response => {
+            if(response.ok) {
+                return response.json()
+            } else {
+                throw response.json()
+            }
+        })
+        .then (data =>{
+            alert (`Ny post sparades med id=${data.id}`)
+            window.location.href=`editUppgift.html?id${id}`
+        })
+        .catch(err => {
+            alert("spara misslyckades, titta i konsolen")
+            console.error(err)
+        })
+
+}
+
+    // inmatningar i formuläret duger för att spara
+
+
 
 function valideraFormulär() {
     let valid = true
@@ -138,7 +173,7 @@ function valideraFormulär() {
     }
     //15 min intervall
     
-        if([!"00","15","30","45"].includes(document.getElementById('inputVaraktighet').value.substring(5, 2))) {
+        if(!["00","15","30","45"].includes(document.getElementById('inputVaraktighet').value.substring(3, 5))) {
         valid=false
     }
     //aktivitet ska finnas

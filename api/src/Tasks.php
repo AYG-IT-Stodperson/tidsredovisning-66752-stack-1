@@ -174,8 +174,47 @@ ORDER BY datum');
  */
 function hamtaEnskildUppgift(string $id): Response
 {
+     // Kontrollera indata
+    $taskId = filter_var($id, FILTER_VALIDATE_INT);
 
+    if ($taskId === false) {
+        $retur = new stdClass();
+        $retur->error = ['Bad request', 'Ogiltigt uppgiftsid'];
+
+        return new Response($retur, 400);
+    }
+
+    // Koppla databas
+    $db = connectDb();
+
+    // Hämta post
+    $stmt = $db->prepare('SELECT uppgifter.id, aktivitet_id, datum, varaktighet,aktivitet, beskrivning 
+FROM uppgifter
+INNER JOIN aktiviteter ON aktiviteter.id=aktivitet_id
+WHERE uppgifter.id=:id');
+    $stmt->execute(['id' => $taskId]);
+
+    // Returnera svar
+    $row = $stmt->fetch();
+    if (!$row) {
+        $retur = new stdClass();
+        $retur->error = ['Bad request', "Angivet id ($taskId) finns inte i databasen"];
+
+        return new Response($retur, 400);
+    }
+    $retur = new stdClass();
+    $retur->id = $row['id'];
+    $retur->date = $row['datum'];
+    $retur->time = substr($row['varaktighet'], 0, 5);
+    $retur->activityId = $row['aktivitet_id'];
+    $retur->activity = $row['aktivitet'];
+    $retur->description = $row['beskrivning'];
+
+    return new Response($retur);
 }
+
+
+
 
 /**
  * Sparar en ny uppgiftspost

@@ -1,8 +1,7 @@
 window.onload=() =>{
     //Skapa händelselyssnare
 
-    document.getElementById('hamtaDatum').addEventListener("click", hamtaDatum)
-    document.getElementById('hamtaSida').addEventListener("click", hamtaSida)
+
 
     //rensa listan
     alert("tömmer listan!");
@@ -36,7 +35,9 @@ function setDateInterval() {
 
 function hamtaDatum() {
         rensaLista()
-    fetch("dummy/uppgifter.json")
+    let franDatum = document.getElementById("franDatum").value;
+    let tillDatum = document.getElementById("tillDatum").value;
+    fetch(`api/tasklist/$(tillDatum)`)
     .then(response =>{
         if(response.ok) {
             return response.json()
@@ -66,7 +67,7 @@ function hamtaDatum() {
 
 function hamtaSida() {
     rensaLista()
-    fetch("dummy/uppgifter.json")
+    fetch(`api/tasklist/${sidnr}`)
     .then(response =>{
         if(response.ok) {
             return response.json()
@@ -87,6 +88,14 @@ function hamtaSida() {
     })
     .then(data =>{
         fyllLista(data)
+        let select=document.getElementById("sidnr");
+         select.innerHTML='';
+            for(let i=0;i<data.pages;i++) {
+                let opt=document.createElement("option");
+                opt.text=`${i+1}`
+                select.appendChild(opt)
+            }
+        select.value = sidnr;
     })
     .catch(error =>{
         console.error(error)
@@ -154,3 +163,35 @@ function aktiveraAlternativ(ev){
     // inte mer än 8 timmar
 
     // jämna kvartar
+
+   /* function alertDelete(id) {
+    if (confirm('Vill du radera posten med id=' + id + '?')) {
+        let form: = new FormData()
+        form.append("action", 'delete')
+        fetch(`api/task/${id}`, {
+        
+        method: "POST",
+        body: from
+        })
+        .then(respomse =>{
+            if(response.ok) {
+            return response.json()
+            }else {
+            throw response.json()
+                }
+                })
+            .then(data =>{
+                if(data.result) {
+                alert('radera lyckades')
+                } else {
+                    alert ("radera missluckades, kontrollera konsolen")
+                console.log(data)
+                    }
+                })
+                    .catch(error => {
+                        alert("något gick fel vid radering, kontrollera konsolen")
+                        console.error(error);
+                })
+    }
+}
+    */

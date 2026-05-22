@@ -9,13 +9,13 @@ window.onload = () => {
         fillForm(parameters.get('id'))
     } else {
 
-    emptyForm()
+        emptyForm()
     }
 }
 
 function fillForm(id) {
     // Hämta data (just nu all data och sen hitta rätt, senare hämta bara rätt data)
-    fetch('dummy/aktiviteter.json')
+    fetch(`api/activity/${id}`)
         .then(response => {
             if (response.ok) {
                 return response.json()
@@ -23,7 +23,7 @@ function fillForm(id) {
             // response är inte ok...
             return response.json()
                 .catch(() => null) // Är svaret inte json händer inget
-                      .then(message => {
+                .then(message => {
 
                     let fel = {
 
@@ -32,26 +32,25 @@ function fillForm(id) {
                         url: response.url,
                         message
                     }
+                    //töm formuläret
+                    emptyForm()
+                    
                     throw fel
                 })
         })
         .then(data => {
-                 let post = data.activities.find(akt => akt.id == id)
-            if (post) {
 
-                // Fyll formuläret och se till att ID syns
-                document.getElementById('valueId').innerText = post.id
-                document.getElementById('labelId').style.display = 'initial'
-                document.getElementById('inputAktivitet').value = post.activity
-            } else {
-                alert("Posten hittades inte")
-                emptyForm()
-            }
+            // Fyll formuläret och se till att ID syns
+            document.getElementById('valueId').innerText = data.id
+            document.getElementById('labelId').style.display = 'initial'
+            document.getElementById('inputAktivitet').value = data.activity
         })
-        .catch(error => {
-          console.error(error)
-        })
+        
+        .catch (error => {
+    console.error(error)
+})
 }
+
 
 function emptyForm() {
     // Göm ID-fältet
@@ -59,4 +58,27 @@ function emptyForm() {
     // Töm inmatningsfältet och sätt fokus
     document.getElementById('inputAktivitet').value = ''
     document.getElementById('inputAktivitet').focus()
+}
+
+function verifieraForm() {
+    //sätt standard returkod
+    let returKod =true
+
+    //återställ alla fält
+    document.getElementById('inputAktivitet_Err').innerText = ""
+    document.getElementById('inputAktivitet').setCustomValidity("")
+    // kontrollera indata
+    let aktivitet = window.document.getElementById("inputAktivitet").value;
+    if(allaAktiviteter.find(a => {
+        //returnera aktiviteten om den finns
+        return a.activity.toLocaleLowerCase() === aktivitet.toLocaleLowerCase()
+    })) {
+        document.getElementById('inputAktivitet_Err').innerText = "aktiviteten finns redan"
+        document.getElementById('inputAktivitet').setCustomValidity("aktiviteten finns redan")
+        returKod=false
+        
+    }
+    //returnera svarskod
+
+    return returKod
 }
