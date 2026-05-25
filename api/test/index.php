@@ -1,7 +1,7 @@
 <?php
 declare (strict_types=1);
 
-require_once '../src/routes.php';
+require_once '../src/Routes.php';
 require_once '../src/Route.php';
 require_once '../src/Response.php';
 require_once '../src/RequestMethod.php';

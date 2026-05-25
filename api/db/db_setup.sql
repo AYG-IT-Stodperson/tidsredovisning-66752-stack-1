@@ -14,11 +14,6 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
-
--- Dumpar databasstruktur för xaghie_applikation_aktivitet_och_uppgifter
-CREATE DATABASE IF NOT EXISTS `xaghie_applikation_aktivitet_och_uppgifter` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_swedish_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `xaghie_applikation_aktivitet_och_uppgifter`;
-
 -- Dumpar struktur för tabell xaghie_applikation_aktivitet_och_uppgifter.aktiviteter
 CREATE TABLE IF NOT EXISTS `aktiviteter` (
   `id` int NOT NULL AUTO_INCREMENT,
@@ -39,7 +34,7 @@ CREATE TABLE IF NOT EXISTS `uppgifter` (
   PRIMARY KEY (`id`),
   KEY `FK_uppgifter_aktiviteter` (`aktivitet_id`),
   CONSTRAINT `FK_uppgifter_aktiviteter` FOREIGN KEY (`aktivitet_id`) REFERENCES `aktiviteter` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_swedish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=78 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_swedish_ci;
 
 -- Dataexport var bortvalt.
 
