@@ -1,7 +1,7 @@
 <?php
 
 declare (strict_types=1);
-require_once '../src/activities.php';
+require_once '../src/Activities.php';
 
 /**
  * Funktion för att testa alla aktiviteter

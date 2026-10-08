@@ -1,7 +1,7 @@
 <?php
 
 declare (strict_types=1);
-require_once __DIR__ . '/../src/compilations.php';
+require_once __DIR__ . '/../src/Compilations.php';
 
 /**
  * Funktion för att testa alla aktiviteter

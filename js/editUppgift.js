@@ -183,3 +183,9 @@ function valideraFormulär() {
 
     return valid;
 }
+
+/*
+
+
+
+*/
